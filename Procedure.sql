@@ -1,4 +1,4 @@
-ï»¿
+ï»¿-- Testing git--
 --Creating a Procedure
 CREATE OR REPLACE PROCEDURE greet_user (
   user_name IN VARCHAR2
@@ -1662,7 +1662,7 @@ returns row count using OUT parameter
 
 handle ORA-00942 (table does not exist)
 
-í ½í´Ÿ Procedure to validate and insert with multiple OUT parameters
+ï¿½ï¿½ï¿½ï¿½ Procedure to validate and insert with multiple OUT parameters
 
 Create a procedure register_customer:
 
