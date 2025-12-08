@@ -1,4 +1,4 @@
-ÔªøCREATE TABLE student (
+CREATE TABLE student (
     student_id INT primary key,
     FirstName VARCHAR2(50),
     LastName VARCHAR2(50),
@@ -114,7 +114,7 @@ DISABLE CONSTRAINT location_fk;
 ------------------------------------------------synonym-----------------------------------------
 
 --Oracle supports private and public synonyms, while SQL Server only supports public synonyms.
---Dropping an object doesn‚Äôt remove the synonym, but queries using it will fail in both databases.
+--Dropping an object doesnít remove the synonym, but queries using it will fail in both databases.
 
 
 create synonym my_table_1 for bike ;
@@ -160,7 +160,7 @@ CREATE SEQUENCE sequence_name
     CACHE cache_size | NOCACHE  -- Store values in memory for performance or disable caching (default: 20)
     ORDER | NOORDER;            -- Guarantee order of sequence values (rarely used)
 
---Oracle Error: ORA-04013 ‚Äì "Number to CACHE must be less than Cycle value"
+--Oracle Error: ORA-04013 ñ "Number to CACHE must be less than Cycle value"
 --This error occurs when the CACHE value (default is 20) is greater than the MAXVALUE when using CYCLE.
 
 --Sequences in SQL Server are global, while in Oracle, they are session-specific
@@ -232,60 +232,60 @@ select round(25.50) from dual ;
 --------------------------------16-3-025, Functins -----------------------------------------
 --===========================string function=============================
 
-1. UPPER() ‚Äì Convert to Uppercase  =         SELECT UPPER('hello world') FROM DUAL;
+1. UPPER() ñ Convert to Uppercase  =         SELECT UPPER('hello world') FROM DUAL;
 
-2. LOWER() ‚Äì Convert to Lowercase =          SELECT LOWER('HELLO WORLD') FROM DUAL;
+2. LOWER() ñ Convert to Lowercase =          SELECT LOWER('HELLO WORLD') FROM DUAL;
 
-3. INITCAP() ‚Äì Capitalize First Letter =     SELECT INITCAP('hello world') FROM DUAL;
+3. INITCAP() ñ Capitalize First Letter =     SELECT INITCAP('hello world') FROM DUAL;
 
-4. LENGTH() ‚Äì Get String Length =            SELECT LENGTH('Oracle SQL') FROM DUAL;
+4. LENGTH() ñ Get String Length =            SELECT LENGTH('Oracle SQL') FROM DUAL;
 
-5. SUBSTR() ‚Äì Extract a Part of String =     SELECT SUBSTR('Oracle SQL', 1, 6) FROM DUAL;
+5. SUBSTR() ñ Extract a Part of String =     SELECT SUBSTR('Oracle SQL', 1, 6) FROM DUAL;
 
-6. INSTR() ‚Äì Find Position of a Substring =  SELECT INSTR('Oracle SQL', 'SQL') FROM DUAL;
+6. INSTR() ñ Find Position of a Substring =  SELECT INSTR('Oracle SQL', 'SQL') FROM DUAL;
 
-7. REPLACE() ‚Äì Replace Substring =           SELECT REPLACE('Hello World', 'World', 'Oracle') FROM DUAL;
+7. REPLACE() ñ Replace Substring =           SELECT REPLACE('Hello World', 'World', 'Oracle') FROM DUAL;
 
-8. TRIM() ‚Äì Remove Spaces from Both Sides =  SELECT TRIM('   Oracle SQL   ') FROM DUAL;
+8. TRIM() ñ Remove Spaces from Both Sides =  SELECT TRIM('   Oracle SQL   ') FROM DUAL;
 
  rtrim = SELECT RTRIM('Oracle SQL   ') FROM DUAL;
  ltrim = SELECT LTRIM('   Oracle SQL') FROM DUAL;
 
-11. CONCAT() ‚Äì Join Two Strings =            SELECT CONCAT('Hello', ' Oracle') FROM DUAL;
+11. CONCAT() ñ Join Two Strings =            SELECT CONCAT('Hello', ' Oracle') FROM DUAL;
 
-12. LPAD() ‚Äì Add Padding on Left =           SELECT LPAD('SQL', 6, '*') FROM DUAL;
+12. LPAD() ñ Add Padding on Left =           SELECT LPAD('SQL', 6, '*') FROM DUAL;
 
-13. RPAD() ‚Äì Add Padding on Right =          SELECT RPAD('SQL', 6, '*') FROM DUAL;
+13. RPAD() ñ Add Padding on Right =          SELECT RPAD('SQL', 6, '*') FROM DUAL;
 
-14. TRANSLATE() ‚Äì Replace Multiple Characters = SELECT TRANSLATE('123-456-789', '123', 'XYZ') FROM DUAL;
+14. TRANSLATE() ñ Replace Multiple Characters = SELECT TRANSLATE('123-456-789', '123', 'XYZ') FROM DUAL;
 
 
 -------------------------------------------Number function---------------------------------------------
 
-1. ROUND() ‚Äì Round a Number =                     SELECT ROUND(123.456, 2) FROM DUAL;
+1. ROUND() ñ Round a Number =                     SELECT ROUND(123.456, 2) FROM DUAL;
  The Oracle/PLSQL ROUND function returns a number rounded to a certain number of decimal places.
 
-2. TRUNC() ‚Äì Truncate a Number =                  SELECT TRUNC(123.456, 2) FROM DUAL; 
+2. TRUNC() ñ Truncate a Number =                  SELECT TRUNC(123.456, 2) FROM DUAL; 
  The Oracle/PLSQL TRUNC function returns a number truncated to a certain number of decimal places.                                                 SELECT TRUNC(123.456, 0) FROM DUAL;
 
-3. CEIL() ‚Äì Round Up to Next Integer =            SELECT CEIL(10.2) FROM DUAL; 
+3. CEIL() ñ Round Up to Next Integer =            SELECT CEIL(10.2) FROM DUAL; 
                                                   SELECT CEIL(-10.2) FROM DUAL;
        
-4. FLOOR() ‚Äì Round Down to Previous Integer =     SELECT FLOOR(10.9) FROM DUAL;
+4. FLOOR() ñ Round Down to Previous Integer =     SELECT FLOOR(10.9) FROM DUAL;
                                                   SELECT FLOOR(-10.9) FROM DUAL;
 
-5. MOD() ‚Äì Get Remainder of Division =            SELECT MOD(10, 3) FROM DUAL;
+5. MOD() ñ Get Remainder of Division =            SELECT MOD(10, 3) FROM DUAL;
  The Oracle/PLSQL MOD function returns the remainder of m divided by n.
  
-6. POWER() ‚Äì Exponentiation =                     SELECT POWER(2, 3) FROM DUAL;
+6. POWER() ñ Exponentiation =                     SELECT POWER(2, 3) FROM DUAL;
 
-7. SQRT() ‚Äì Square Root =                         SELECT SQRT(25) FROM DUAL;
+7. SQRT() ñ Square Root =                         SELECT SQRT(25) FROM DUAL;
 
-8. ABS() ‚Äì Absolute Value =                       SELECT ABS(-10) FROM DUAL;
+8. ABS() ñ Absolute Value =                       SELECT ABS(-10) FROM DUAL;
 
-10. GREATEST() ‚Äì Find Largest Number =            SELECT GREATEST(10, 20, 30, 40) FROM DUAL;
+10. GREATEST() ñ Find Largest Number =            SELECT GREATEST(10, 20, 30, 40) FROM DUAL;
 
-11. LEAST() ‚Äì Find Smallest Number =              SELECT LEAST(10, 20, 30, 40) FROM DUAL;
+11. LEAST() ñ Find Smallest Number =              SELECT LEAST(10, 20, 30, 40) FROM DUAL;
 
 -------------------------------------------------------------------------------------------------------
 
@@ -806,7 +806,7 @@ select first_name,last_name,department_id , sum(salary) over (partition by depar
 --They are different from aggregate functions, which return a single result for a group of rows. 
 --Analytical functions, however, provide multiple rows of output based on a group of rows.
 
---Here‚Äôs a breakdown of analytical functions:
+--Hereís a breakdown of analytical functions:
 
 --Key Components
 --PARTITION BY: Divides the result set into partitions to which the function is applied.
@@ -1424,7 +1424,7 @@ left join hr.departments d
 on l.location_id = d.location_id ;
 
 6.List all employees and the department names they belong to, but include employees even 
-  if they‚Äôre not assigned to any department.
+  if theyíre not assigned to any department.
 
 select first_name, last_name, department_name from hr.employees e
 left join hr.departments d
@@ -1491,13 +1491,13 @@ select l.city, department_name from hr.departments d
 right join hr.locations l
 on d.location_id = l.location_id ;
 
-5.Show all departments and the managers assigned to them, including departments that currently don‚Äôt have a manager
+5.Show all departments and the managers assigned to them, including departments that currently donít have a manager
 
 select department_name, first_name ||' '|| last_name as manager_name from hr.employees e
 right join hr.departments d 
 on e.department_id = d.manager_id ;
 
-6.Display all employees and their managers‚Äô names, including employees who are not managed by anyone.
+6.Display all employees and their managersí names, including employees who are not managed by anyone.
 
 select e.first_name || ' ' || e.last_name as employee_name ,
        b.first_name || ' ' || b.last_name as manager_name from hr.employees b
@@ -1560,7 +1560,7 @@ select country_name, l.city from hr.locations l
 full join hr.countries c
 on l.country_id = c.country_id ;
 
-5.Show all employees and their managers‚Äô names, even if an employee has no manager or 
+5.Show all employees and their managersí names, even if an employee has no manager or 
   someone is not managing anyone.
 
 select a.first_name ||' '|| a.last_name as employee_name ,
@@ -1589,7 +1589,7 @@ select first_name, last_name, j.* from hr.employees e
 full join hr.job_history j
 on e.employee_id = j.employee_id ;
 
-9.List all departments and job titles, even if some job titles aren‚Äôt assigned in the department or vice versa.
+9.List all departments and job titles, even if some job titles arenít assigned in the department or vice versa.
 
 select department_name, job_title from hr.departments d
 full join hr.employees e
@@ -1743,7 +1743,7 @@ select e.first_name, e.last_name, e.salary from hr.employees e
 where e.salary = (select min(e1.salary) from hr.employees e1
                    where e.job_id = e1.job_id ) ;
 
---8.Display employees whose commission is greater than their department‚Äôs average commission.
+--8.Display employees whose commission is greater than their departmentís average commission.
 
 select e.first_name, e.last_name, e.salary 
 from hr.employees e
@@ -1784,7 +1784,7 @@ where not exists (
 );
 
 
---10.List jobs where the maximum salary is more than any employee‚Äôs salary in that job.
+--10.List jobs where the maximum salary is more than any employeeís salary in that job.
 
 select j.job_id, j.job_title
 from hr.jobs j
@@ -1840,7 +1840,7 @@ select
 from
        hr.employees ;
 
---6.Display each employee‚Äôs salary and the difference from the department‚Äôs average salary.
+--6.Display each employeeís salary and the difference from the departmentís average salary.
 
 select 
        first_name, 
@@ -2270,97 +2270,7 @@ SELECT LEVEL,
 FROM dual
 CONNECT BY LEVEL <= 200;
 
---------------------------------------------------------------------------------------------------------------
---------------------------------------------------------------------------------------------------------------
-                                        from here Git is tracking 
---------------------------------------------------------------------------------------------------------------
---------------------------------------------------------------------------------------------------------------
 
-commit;
-
---Aggregate Functions (GROUP BY / HAVING / SUM / AVG / COUNT)
---Q1: Find the total quantity of items purchased by each client.
---Show CLIENT_NAME, total quantity.
---Sort by total quantity descending.
-
-select c.client_name, sum(quantity) as total_quentity
-  from clients c
-  join sales s
-    on c.client_id = s.client_id
- group by c.client_name
- order by total_quentity desc;
-
-
---Q2: Find the average order value per client.
---Use PRICE * QUANTITY as order value.
---Show CLIENT_NAME and average order value.
-
-select c.client_name, round(avg(quantity*price),2) as avg_order_value
-  from clients c
-  join sales s
-    on c.client_id = s.client_id
-  join items i
-    on i.item_id = s.item_id
- group by c.client_name
- order by avg_order_value desc;
-
---Q3: Find items that have been sold more than 5 times in total.
---Show ITEM_NAME, total quantity sold.
-  select i.item_name, sum(quantity) as quantity_sold
-    from items i
-    join sales s
-      on i.item_id = s.item_id
-   group by i.item_name
-  having sum(quantity) > 5;
-
-
---2.Analytical Functions (OVER / RANK / ROW_NUMBER / LEAD / LAG)
---Q4: For each client, assign a rank based on total purchase amount.
---Total purchase amount = SUM(PRICE * QUANTITY) per client
---Use RANK() function
-
-
-
-select * from clients ;
-select * from items ;
-select * from sales ;
-/*Q5: For each client, show their last 3 purchases by SALE_DATE.
-
-Include SALE_ID, ITEM_NAME, SALE_DATE, QUANTITY
-
-Use ROW_NUMBER() or RANK() analytical function
-
-Q6: Show for each client the current sale amount and previous sale amount (based on SALE_DATE).
-
-Columns: CLIENT_NAME, SALE_DATE, CURRENT_AMOUNT, PREV_AMOUNT
-
-Use LAG()
-
-3Ô∏è‚É£ Joins (INNER / LEFT / RIGHT / FULL / CROSS)
-
-Q7: List all sales with client and item details.
-
-Columns: SALE_ID, CLIENT_NAME, ITEM_NAME, QUANTITY, SALE_DATE
-
-Use INNER JOIN
-
-Q8: List all clients and their total number of orders, including clients who never placed an order.
-
-Columns: CLIENT_NAME, TOTAL_ORDERS
-
-Use LEFT JOIN
-
-Q9: List all items and total quantity sold, including items never sold.
-
-Columns: ITEM_NAME, TOTAL_QUANTITY
-
-Use RIGHT JOIN or LEFT JOIN
-
-Q10: Find clients who have purchased the same item more than once.
-
-Show CLIENT_NAME, ITEM_NAME, COUNT(*)
-
-Use JOIN with aggregate*/
 
 
 
