@@ -1,0 +1,944 @@
+﻿
+--Creating a Procedure
+CREATE OR REPLACE PROCEDURE greet_user (
+  user_name IN VARCHAR2
+) IS
+BEGIN
+  DBMS_OUTPUT.PUT_LINE('Hello, ' || user_name || '!');
+END;
+/
+
+--Executing the Procedure
+BEGIN
+  greet_user('John');
+END;
+/
+
+--Procedure with IN and OUT Parameters
+
+CREATE OR REPLACE PROCEDURE get_employee_name (
+  emp_id IN NUMBER,
+  emp_name OUT VARCHAR2
+) IS
+BEGIN
+  SELECT first_name || ' ' || last_name
+  INTO emp_name
+  FROM hr.employees
+  WHERE employee_id = emp_id;
+
+EXCEPTION
+  WHEN NO_DATA_FOUND THEN
+    emp_name := 'Employee not found';
+END;
+/
+
+--Executing the Procedure
+  DECLARE
+    v_emp_name VARCHAR2(100);
+  BEGIN
+    get_employee_name(101, v_emp_name);
+    DBMS_OUTPUT.PUT_LINE('Employee Name: ' || v_emp_name);
+  END;
+/
+
+
+--The following procedure accepts a customer id and prints out the customer’s 
+--contact information including first name, last name, and email:
+
+
+create or replace procedure emp_det(
+emp_id in number,
+first_name out varchar2,
+last_name out varchar2,
+email out varchar2
+) as 
+begin
+  select first_name, last_name, email
+  into first_name, last_name, email
+  from hr.employees
+  where employee_id = emp_id ;
+  
+  exception
+     WHEN NO_DATA_FOUND THEN
+    first_name := 'N/A';
+    last_name := 'N/A';
+    email := 'N/A';
+END;
+/  
+
+DECLARE
+  first_name VARCHAR2(100);
+  last_name VARCHAR2(100);
+  email VARCHAR2(100);
+BEGIN
+  emp_det(101, first_name, last_name, email);
+
+  -- Output the details
+  DBMS_OUTPUT.PUT_LINE('First Name: ' || first_name);
+  DBMS_OUTPUT.PUT_LINE('Last Name: ' || last_name);
+  DBMS_OUTPUT.PUT_LINE('Email: ' || email);
+END;
+/
+
+
+--Procedure with IN OUT Parameters
+  
+CREATE OR REPLACE PROCEDURE update_salary (
+  emp_id IN NUMBER,
+  emp_salary IN OUT NUMBER
+) IS
+BEGIN
+  UPDATE hr.employees
+  SET salary = salary - emp_salary 
+  WHERE employee_id = emp_id;
+
+  -- Return the updated salary
+  SELECT salary
+  INTO emp_salary
+  FROM hr.employees
+  WHERE employee_id = emp_id;
+END;
+/
+
+DECLARE
+  v_salary NUMBER := 5000;
+BEGIN
+  update_salary(101, v_salary);
+  DBMS_OUTPUT.PUT_LINE('Updated Salary: ' || v_salary);
+END;
+/
+
+ALL_PROCEDURES;
+  
+  
+  select * from hr.employees
+  where employee_id = 101;
+
+
+
+
+
+
+
+create or replace function demo
+return varchar2
+is 
+begin
+  return 'hello word';
+  end;
+  
+  begin
+    dbms_output.put_line(demo());
+    end;
+    
+---------------------------------------------------------------------------------------------------------------
+--+++=== B_PLSQL PROCEDURE DATA
+
+create or replace procedure p1 is 
+  CURSOR C_VNAME IS
+    SELECT VID, VCREDITDAYS FROM VENDORS;
+
+  V_VID   VENDORS.VID%TYPE;
+  V_CDAYS VENDORS.VCREDITDAYS%TYPE;
+
+  V_INCREMENT NUMBER := 0;
+BEGIN
+  OPEN C_VNAME;
+  LOOP
+    FETCH C_VNAME
+      INTO V_VID, V_CDAYS;
+    EXIT WHEN C_VNAME%NOTFOUND;
+    IF V_CDAYS < 20 THEN
+      V_INCREMENT := V_CDAYS + 5;
+      DBMS_OUTPUT.PUT_LINE('Vendors : ' || V_VID || ' Creditdays Increase By : ' || V_INCREMENT);
+    END IF;
+  END LOOP;
+  CLOSE C_VNAME;
+END;
+
+begin
+  p1 ;
+  end ;
+ 
+  declare int
+p_emp_id number:=*100*;
+begin
+pl (p_emp_id );
+end;
+
+exec pl (100);
+
+
+--A stored procedure in Oracle PL/SQL is a named block of code (like a function) that performs a specific task
+--and is stored in the database. You can call it multiple times, pass parameters, and even include conditional
+--logic, loops, cursors, etc.
+
+--Syantax
+CREATE OR REPLACE PROCEDURE procedure_name (
+  param1 IN datatype,
+  param2 OUT datatype
+)
+IS
+BEGIN
+  -- Procedure logic here
+END;
+----
+
+CREATE OR REPLACE PROCEDURE show_greeting as
+BEGIN
+  DBMS_OUTPUT.PUT_LINE('Hello from procedure!');
+END;
+
+begin
+show_greeting;
+end;
+----
+
+CREATE OR REPLACE PROCEDURE greet_user(p_name IN VARCHAR2) IS
+BEGIN
+  DBMS_OUTPUT.PUT_LINE('Hello, ' || p_name || '!');
+END;
+
+begin
+greet_user('Alex');
+end;
+----
+
+CREATE OR REPLACE PROCEDURE get_bonus   ----get_bonus(salary,bonus)
+(salary IN NUMBER, bonus OUT NUMBER) IS  ---b
+BEGIN
+  bonus := salary * 0.10;
+END;
+
+DECLARE
+  b NUMBER;
+BEGIN
+  get_bonus(5000, b);
+  DBMS_OUTPUT.PUT_LINE('Bonus: ' || b);
+END;
+
+CREATE OR REPLACE PROCEDURE get_bonus   ----get_bonus(salary,bonus)
+(salary IN NUMBER, bonus OUT NUMBER,total out number) IS  ---b
+BEGIN
+  bonus := salary * 0.10;
+  total := salary + bonus;
+END;
+
+DECLARE
+  b NUMBER;
+  t number;
+BEGIN
+  get_bonus(5000, b, t);
+  DBMS_OUTPUT.PUT_LINE('Bonus: ' || b || ' Total : ' || t);
+END;
+----
+
+CREATE OR REPLACE PROCEDURE show_low_salary_employees IS
+BEGIN
+  FOR rec IN (SELECT first_name, salary FROM hr.employees WHERE salary < 3000) LOOP
+    DBMS_OUTPUT.PUT_LINE(rec.first_name || ' - ' || rec.salary);
+  END LOOP;
+END;
+
+BEGIN
+  show_low_salary_employees;
+END;
+/
+
+----
+CREATE OR REPLACE PROCEDURE increase_salary(emp_id IN NUMBER, pct IN NUMBER) IS
+BEGIN
+  UPDATE employee1
+  SET salary = salary + (salary * pct / 100)
+  WHERE employee_id = emp_id;
+
+  DBMS_OUTPUT.PUT_LINE('Salary updated for employee ' || emp_id);
+END;
+
+begin
+increase_salary(101, 200);
+end;
+----
+
+--1.Write a stored procedure that accepts a person's name as an IN parameter and prints a welcome message like:
+--Hello, [name]! Welcome to our system.
+CREATE OR REPLACE PROCEDURE greet_user(p_name IN VARCHAR2) IS
+BEGIN
+  DBMS_OUTPUT.PUT_LINE('Hello, ' || p_name || '!');
+END;
+
+begin
+greet_user('Alex');
+end;
+
+--2.Create a procedure that takes a number as IN, calculates its square, and returns it through an OUT parameter.
+
+create or replace procedure p_square(p_number  in number,
+                                     p_squarer out number) is
+begin
+  p_squarer := p_number * p_number;
+end;
+  
+declare
+  a number;
+  b number := &num;
+begin
+  p_square(b, a);
+  dbms_output.put_line('Square root of ' || b || ' is : ' || a);
+end;
+
+--3.Write a procedure that accepts an employee ID as input and prints the employee's name and 
+--salary using the employees table.
+
+create or replace procedure p_emp(P_empid in number) is
+begin
+  for rec in (select first_name, salary
+                from employee1
+               where employee_id = p_empid) loop
+    dbms_output.put_line(rec.first_name || ' - ' || rec.salary);
+  end loop;
+end;
+    
+    
+  begin
+    p_emp(100);
+  end;
+---way 2     
+create or replace procedure p_emp(P_empid in number) is
+  cursor c_emp is
+    select first_name, salary from employee1 where employee_id = p_empid;
+  v_fname employee1.first_name%type;
+  v_sal   employee1.salary%type;
+begin
+  open c_emp;
+  loop
+    fetch c_emp
+      into v_fname, v_sal;
+    exit when c_emp%notfound;
+    dbms_output.put_line(v_fname || ' - ' || v_sal);
+  end loop;
+end;
+
+begin
+  p_emp(101);
+end;
+---way 3
+create or replace procedure p_emp(P_empid in number,
+                                  p_name  out varchar2,
+                                  p_sal   out number) is
+begin
+  select first_name, salary
+    into p_name, p_sal
+    from employee1
+   where employee_id = p_empid;
+  dbms_output.put_line(p_name || p_sal);
+end;
+
+declare a varchar2(50); b number;
+begin
+p_emp(100, a, b);
+end;
+--way4
+create or replace procedure p_emp(P_empid in number,
+                                  v_fname out varchar2,
+                                  v_sal   out number) is
+  cursor c_emp is
+    select first_name, salary from employee1 where employee_id = p_empid;
+  --v_fname employee1.first_name%type;
+  --v_sal   employee1.salary%type;
+begin
+  open c_emp;
+  loop
+    fetch c_emp
+      into v_fname, v_sal;
+    exit when c_emp%notfound;
+    dbms_output.put_line(v_fname || ' - ' || v_sal);
+  end loop;
+end;
+
+declare a varchar2(50); b number;
+begin
+p_emp(101, a, b);
+end;
+    
+--4.Create a procedure that takes a city name as input and prints all customer names from that city 
+--(use your customer1 table).
+
+create or replace procedure p_emp(P_cadd in varchar2, p_cname out varchar2) is
+begin
+  select cname into p_cname from customer1 where cadd = p_cadd;
+  dbms_output.put_line(p_cname);
+end;
+
+declare a varchar2(30);
+begin
+p_emp('NEW YORK', a);
+end;
+---
+create or replace procedure p1(p_city in varchar2, p_cname out varchar2) is
+  cursor cur is
+    select cname into p_cname from customer1 where cadd = P_city;
+begin
+  open cur;
+  loop
+    fetch cur
+      into p_cname;
+    exit when cur%notfound;
+    dbms_output.put_line(p_cname || ' - ' || p_city);
+  end loop;
+end;
+ 
+declare
+  add varchar2(100);
+begin
+  p1('NEW YORK', add);
+end;
+
+select * from customer1;
+
+--5.Write a procedure that accepts a vendor ID and additional credit days as IN parameters, 
+--and updates the vcreditdays in the vendors table.
+
+create or replace procedure p_v(p_vid in number, p_adddays in number) is
+  v_addcredit number := 0;
+
+begin
+  for rec in (select vcreditdays from vendors where vid = p_vid) loop
+    v_addcredit := rec.vcreditdays + p_adddays;
+    dbms_output.put_line(' before add days : ' || rec.vcreditdays ||
+                         ' after : ' || v_addcredit);
+  
+    update vendors1 set vcreditdays = v_addcredit where vid = p_vid;
+  
+  end loop;
+end;
+
+begin
+  p_v(2001, 5);
+end;
+
+rollback;
+
+create table vendors1 as select * from vendors ;
+
+select * from vendors1;
+
+--6.Create a procedure that accepts a department ID as input. For all employees in that department:
+--If salary < 3000, print: Low earner: [name] - [salary]
+--If salary >= 3000, print: Eligible for incentive: [name] - [salary]
+
+create or replace procedure p_emp(p_dptid in number) is
+begin
+  for rec in (select salary, first_name
+                from hr.employees
+               where department_id = p_dptid) loop
+    if rec.salary < 3000 then
+      dbms_output.put_line('Low earner : ' || rec.first_name ||
+                           ' salary is : ' || rec.salary);
+    else
+      dbms_output.put_line('Eligible for incentive: ' || rec.first_name ||
+                           ' salary is : ' || rec.salary);
+    end if;
+  end loop;
+end;
+      
+begin
+  p_emp(90);
+end;
+
+--7.Write a procedure that takes a city name as input and returns the number of customers 
+--in that city through an OUT parameter.
+
+create or replace procedure p_city is
+begin
+  for rec in (select count(e.employee_id) as total_cus, l.city
+                from hr.employees e
+                join hr.departments d
+                  on e.department_id = d.department_id
+                join hr.locations l
+                  on l.location_id = d.location_id
+               where l.city in ('Oxford' , 'London')
+               group by l.city) loop
+    dbms_output.put_line('Total customer in ' || rec.city || ' is : ' ||
+                         rec.total_cus);
+  end loop;
+  EXCEPTION
+  WHEN OTHERS THEN
+    dbms_output.put_line('err:-'||dbms_utility.format_error_stack);
+    dbms_output.put_line('Backtrace: ' ||dbms_utility.format_error_backtrace);
+END;
+
+begin
+  p_city;
+end;
+----Way 2
+create or replace procedure p1(p_count out number) is
+begin
+  
+select count(e.employee_id) into p_count  from hr.employees e
+    join hr.departments d on e.department_id = d.department_id
+    join hr.locations l on l.location_id = d.location_id 
+    where l.city = 'Oxford'
+    group by l.city ;
+    dbms_output.put_line('total customer : '|| p_count);
+    end;
+
+declare
+v_count  number;
+begin
+p1(v_count);
+end;
+ 
+
+select * from hr.locations ;
+select * from hr.departments ;
+select * from hr.employees ;
+
+select count(e.employee_id) as total_cus, l.city  from hr.employees e
+    join hr.departments d on e.department_id = d.department_id
+    join hr.locations l on l.location_id = d.location_id 
+    where l.city in ('Oxford' , 'London')
+    group by l.city ;
+
+--8.Create a procedure to loop through all vendors:
+--If vcreditdays is below 15, increase it by 5.
+--Print updated credit days for such vendors.
+--Use a cursor FOR loop.
+
+create or replace procedure p_vendor is
+  v_increase number := 0;
+begin
+  for rec in (select vname, vcreditdays from vendors) loop
+    if rec.vcreditdays < 15 then
+      v_increase := rec.vcreditdays + 5;
+      dbms_output.put_line('Updated credit days is : ' || v_increase ||
+                           ' to ' || rec.vcreditdays);
+    end if;
+  end loop;
+end;
+
+begin
+p_vendor;
+end;
+
+select * from vendors;
+
+--9.Create a procedure that loops through the ser_det table:
+--For each row, calculate ser_amt + sp_amt.
+--If the total is more than 700, print the SID and total with a message:
+--High bill: SID [sid] - Total: [amount]
+
+create or replace procedure p_ser_det is
+  v_total number := 0;
+begin
+  for rec in (select sid, ser_amt, sp_amt from ser_det) loop
+    if rec.ser_amt + rec.sp_amt > 700 then
+      v_total := rec.ser_amt + rec.sp_amt;
+      dbms_output.put_line('High bill : ' || rec.sid || ' Total : ' ||
+                           v_total);
+    end if;
+  end loop;
+end;
+    
+begin
+  p_ser_det;
+end;
+
+--10--Write a PL/SQL procedure named Check_Bonus_Eligibility that:
+--Uses an explicit cursor to retrieve all employees from the HR.EMPLOYEES table.
+--For each employee, based on their salary:
+--If the salary is less than 5000, print:
+--'Employee [first_name last_name] (ID: [employee_id]) is eligible for bonus.'
+--If the salary is between 5000 and 10000, print:
+--'Employee [first_name last_name] (ID: [employee_id]) may be considered for bonus.'
+--Else, print:
+--'Employee [first_name last_name] (ID: [employee_id]) is not eligible for bonus.'
+--Count how many employees fall into each category, and display the totals at the end.
+ 
+----28-05-2025  Wednesday-----------------------------------------------------------------------------------
+
+--Write a PL/SQL procedure named Check_Bonus_Eligibility that:
+--Uses an explicit cursor to retrieve all employees from the HR.EMPLOYEES table.
+--For each employee, based on their salary:
+--If the salary is less than 5000, print:
+--'Employee [first_name last_name] (ID: [employee_id]) is eligible for bonus.'
+--If the salary is between 5000 and 10000, print:
+--'Employee [first_name last_name] (ID: [employee_id]) may be considered for bonus.'
+--Else, print:
+--'Employee [first_name last_name] (ID: [employee_id]) is not eligible for bonus.'
+--Count how many employees fall into each category, and display the totals at the end.
+
+create or replace procedure p_emp is
+  v_count1 number := 0;
+  v_count2 number := 0;
+  v_count3 number := 0;
+begin
+  for rec in (select first_name, last_name, employee_id, salary
+                from hr.employees) loop
+    if rec.salary < 5000 then
+      v_count1 := v_count1 + 1;
+      dbms_output.put_line('Employee : ' || rec.first_name || ' ' ||
+                           rec.last_name || ' ID : ' || rec.employee_id ||
+                           ' is eligible for bonus ');
+      dbms_output.put_line('                                                  ');
+    elsif rec.salary between 5000 and 10000 then
+      v_count2 := v_count2 + 1;
+      dbms_output.put_line('Employee : ' || rec.first_name || ' ' ||
+                           rec.last_name || ' ID : ' || rec.employee_id ||
+                           ' may be considered for bonus ');
+      dbms_output.put_line('                                                  ');
+    else
+      v_count3 := v_count3 + 1;
+      dbms_output.put_line('Employee : ' || rec.first_name || ' ' ||
+                           rec.last_name || ' ID : ' || rec.employee_id ||
+                           '  is not eligible for bonus. ');
+      dbms_output.put_line('                                                  ');
+    end if;
+  end loop;
+  dbms_output.put_line('                                                   ');
+  dbms_output.put_line('--------------------------------------------------');
+  dbms_output.put_line('                                                  ');
+  dbms_output.put_line('Total emp that have salary < 5000 is : ' ||
+                       v_count1);
+  dbms_output.put_line('                                                  ');
+  dbms_output.put_line('Total emp that have salary between 5000 and 10000 is : ' ||
+                       v_count2);
+  dbms_output.put_line('                                                  ');
+  dbms_output.put_line('Total emp that have other salary  is : ' ||
+                       v_count3);
+end;
+
+begin
+  p_emp;
+end;
+-----Way 2
+CREATE OR REPLACE PROCEDURE Check_Bonus_Eligibility IS
+    -- Declare explicit cursor to fetch employees
+    CURSOR emp_cursor IS
+        SELECT employee_id, first_name, last_name, salary
+        FROM HR.EMPLOYEES;
+ 
+    -- Declare variables to store employee data
+    v_employee_id HR.EMPLOYEES.employee_id%TYPE;
+    v_first_name HR.EMPLOYEES.first_name%TYPE;
+    v_last_name HR.EMPLOYEES.last_name%TYPE;
+    v_salary HR.EMPLOYEES.salary%TYPE;
+ 
+    -- Counters for each category
+    eligible_count NUMBER := 0;
+    consider_count NUMBER := 0;
+    not_eligible_count NUMBER := 0;
+ 
+BEGIN
+    -- Iterate through employees using a cursor loop
+    FOR emp_rec IN emp_cursor LOOP
+        v_employee_id := emp_rec.employee_id;
+        v_first_name := emp_rec.first_name;
+        v_last_name := emp_rec.last_name;
+        v_salary := emp_rec.salary;
+ 
+        -- Determine bonus eligibility
+        IF v_salary < 5000 THEN
+            DBMS_OUTPUT.PUT_LINE('Employee ' || v_first_name || ' ' || v_last_name ||
+                                ' (ID: ' || v_employee_id || ') is eligible for bonus.');
+            eligible_count := eligible_count + 1;
+        ELSIF v_salary BETWEEN 5000 AND 10000 THEN
+            DBMS_OUTPUT.PUT_LINE('Employee ' || v_first_name || ' ' || v_last_name ||
+                                ' (ID: ' || v_employee_id || ') may be considered for bonus.');
+            consider_count := consider_count + 1;
+        ELSE
+            DBMS_OUTPUT.PUT_LINE('Employee ' || v_first_name || ' ' || v_last_name ||
+                                ' (ID: ' || v_employee_id || ') is not eligible for bonus.');
+            not_eligible_count := not_eligible_count + 1;
+        END IF;
+    END LOOP;
+ 
+    -- Print summary counts
+    DBMS_OUTPUT.PUT_LINE('Total eligible employees: ' || eligible_count);
+    DBMS_OUTPUT.PUT_LINE('Total employees for consideration: ' || consider_count);
+    DBMS_OUTPUT.PUT_LINE('Total employees not eligible: ' || not_eligible_count);
+END Check_Bonus_Eligibility;
+
+begin
+Check_Bonus_Eligibility;
+end;
+
+
+
+CREATE OR REPLACE PROCEDURE proc_associative_arr_bulk AS
+    CURSOR c IS 
+    SELECT
+        employee_id,
+        first_name,
+        last_name,
+        email,
+        phone_number,
+        hire_date,
+        job_id,
+        salary,
+        --commission_pct,
+        manager_id,
+        department_id
+    FROM
+        emp1;
+ 
+    TYPE t IS
+        TABLE OF c%rowtype;
+    l_tbl t;
+
+BEGIN
+    EXECUTE IMMEDIATE 'TRUNCATE TABLE EMP5';
+    
+    OPEN c;
+
+    LOOP
+        FETCH c
+        BULK COLLECT INTO l_tbl LIMIT 100000;
+        
+        EXIT WHEN l_tbl.COUNT = 0;  -- Exit when no more rows
+        
+        FORALL i IN 1..l_tbl.COUNT
+            INSERT INTO emp5 (
+                employee_id,
+                first_name,
+                last_name,
+                email,
+                phone_number,
+                hire_date,
+                job_id,
+                salary,
+                --commission_pct,
+                manager_id,
+                department_id
+            ) VALUES ( l_tbl(i).employee_id,
+                       l_tbl(i).first_name,
+                       l_tbl(i).last_name,
+                       l_tbl(i).email,
+                       l_tbl(i).phone_number,
+                       l_tbl(i).hire_date,
+                       l_tbl(i).job_id,
+                       l_tbl(i).salary,
+                       --l_tbl(i).commission_pct,
+                       l_tbl(i).manager_id,
+                       l_tbl(i).department_id );
+    END LOOP;
+ 
+    CLOSE c;
+    
+    -- Gather stats after all data is loaded
+    dbms_stats.gather_table_stats(
+        ownname => 'SYS',
+        tabname => 'EMP1',
+        cascade => TRUE
+    );
+
+EXCEPTION
+    WHEN OTHERS THEN
+        dbms_output.put_line('errrr:-'
+                             || dbms_utility.format_error_stack
+                             || dbms_utility.format_error_backtrace);
+        IF c%ISOPEN THEN
+            CLOSE c;
+        END IF;
+END proc_associative_arr_bulk;
+/
+
+BEGIN
+  proc_associative_arr_bulk;
+END;
+/
+
+
+select count(*) from emp5 ;
+select count(*) from emp1 ;
+
+truncate table emp5 ;
+drop table emp1;
+
+SELECT owner, table_name
+FROM all_tables
+WHERE table_name = 'EMP1';
+
+SELECT USER FROM DUAL;
+
+SELECT owner EMP5 FROM all_tables  -- ❌ Missing comma!
+
+
+
+
+-- Raise application error examples 
+--  Example: Procedure using RAISE_APPLICATION_ERROR
+CREATE OR REPLACE PROCEDURE add_employee (
+  p_id         NUMBER,
+  p_name       VARCHAR2,
+  p_salary     NUMBER
+)
+IS
+BEGIN
+  -- Check for salary rule
+  IF p_salary < 1000 THEN
+    RAISE_APPLICATION_ERROR(-20001, 'Salary must be at least 1000.');
+  END IF;
+
+  -- Otherwise, insert
+  INSERT INTO employee(emp_id, emp_name, salary)
+  VALUES (p_id, p_name, p_salary);
+
+  DBMS_OUTPUT.PUT_LINE('Employee added successfully.');
+EXCEPTION
+  WHEN OTHERS THEN
+    -- Print the custom or system error
+    DBMS_OUTPUT.PUT_LINE(SQLERRM);
+END;
+
+BEGIN
+  add_employee(101, 'Alice', 500); -- Will trigger custom error
+END;
+
+-- Another Example: Prevent deleting admin user
+CREATE OR REPLACE PROCEDURE delete_user(p_user_id NUMBER)
+IS
+  v_role VARCHAR2(20);
+BEGIN
+  SELECT user_role INTO v_role FROM users WHERE user_id = p_user_id;
+
+  IF v_role = 'ADMIN' THEN
+    RAISE_APPLICATION_ERROR(-20002, 'Cannot delete ADMIN user.');
+  END IF;
+
+  DELETE FROM users WHERE user_id = p_user_id;
+
+  DBMS_OUTPUT.PUT_LINE('User deleted successfully.');
+
+EXCEPTION
+  WHEN OTHERS THEN
+    DBMS_OUTPUT.PUT_LINE(SQLERRM);
+END;
+
+
+--       Exercise
+-- You're building a procedure to register students into a students table. The rules are:
+-- Student's age must be at least 18.
+-- Student's email must be unique (no duplicate emails allowed).
+-- If any rule is violated, raise a custom error using RAISE_APPLICATION_ERROR.
+
+CREATE TABLE student1 (
+  student_id   NUMBER PRIMARY KEY,
+  name         VARCHAR2(50),
+  age          NUMBER,
+  email        VARCHAR2(100) UNIQUE
+);
+
+-- Procedure: register_student
+CREATE OR REPLACE PROCEDURE register_student (
+  p_id    NUMBER,
+  p_name  VARCHAR2,
+  p_age   NUMBER,
+  p_email VARCHAR2
+)
+IS
+  v_count NUMBER;
+BEGIN
+  -- Rule 1: Age must be 18 or older
+  IF p_age < 18 THEN
+    RAISE_APPLICATION_ERROR(-20001, 'Student must be at least 18 years old.');
+  END IF;
+
+  -- Rule 2: Email must be unique
+  SELECT COUNT(*) INTO v_count
+  FROM student1
+  WHERE LOWER(email) = LOWER(p_email);
+
+  IF v_count > 0 THEN
+    RAISE_APPLICATION_ERROR(-20002, 'Email already exists. Please use another.');
+  END IF;
+
+  -- Insert if all validations pass
+  INSERT INTO student1 (student_id, name, age, email)
+  VALUES (p_id, p_name, p_age, p_email);
+
+  DBMS_OUTPUT.PUT_LINE('Student registered successfully.');
+EXCEPTION
+  WHEN OTHERS THEN
+    DBMS_OUTPUT.PUT_LINE('Error: ' || SQLERRM);
+    dbms_output.put_line(DBMS_UTILITY.FORMAT_ERROR_STACK ||
+                         DBMS_UTILITY.FORMAT_ERROR_BACKTRACE);
+    
+END;
+
+--Valid Student
+BEGIN
+  register_student(1, 'John Doe', 20, 'john@mail.com');
+END;
+--Underage Student
+BEGIN
+  register_student(2, 'Mini Me', 16, 'mini@mail.com');
+END;
+--Duplicate Email
+BEGIN
+  register_student(3, 'Jane Doe', 22, 'john@mail.com');
+END;
+
+
+
+--●How do you calculate total hours worked by each employee?
+
+select employee_id, sum(hours_worked) as total_work
+  from employee
+ group by employee_id;
+
+create or replace procedure emp_total_hour_work is
+begin
+  for rec in (select employee_id, sum(hours_worked) as total_hour
+                from employee
+               group by employee_id) loop
+    dbms_output.put_line('Employee :' || rec.employee_id ||
+                         ' Total hour work is :' || rec.total_hour);
+  end loop;
+end;
+
+begin
+  emp_total_hour_work;
+end;
+
+--●How can you find the average number of tasks completed per department?
+
+select department, avg(tasks_completed) as average_task_completed
+  from employee
+ group by department;
+
+create or replace procedure emp_average_task_completed is
+begin
+  for rec in (select department,
+                     round(avg(tasks_completed),3) as average_task_completed
+                from employee
+               group by department) loop
+    dbms_output.put_line('Department :' || rec.department ||
+                         ' Average number of tasks completed :' ||
+                         rec.average_task_completed);
+  end loop;
+end;
+
+begin
+  emp_average_task_completed;
+end;
+
+--●Which project had the highest total hours logged?
+
+create or replace procedure emp_project_highest_hours is
+begin
+  for rec in (SELECT *
+                FROM (SELECT project, SUM(hours_worked) AS total_work
+                        FROM employee
+                       GROUP BY project
+                       ORDER BY total_work DESC)
+               WHERE ROWNUM <= 1) loop
+    dbms_output.put_line('Department :' || rec.project ||
+                         ' Average number of tasks completed :' ||
+                         rec.total_work);
+  end loop;
+end;
+
+begin
+  emp_project_highest_hours;
+end;
