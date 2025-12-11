@@ -823,8 +823,8 @@ SELECT employee_id, salary,
        ROW_NUMBER() OVER (ORDER BY salary DESC) AS row_num
 FROM hr.employees;
 
-select e.*, row_number() over (partition by job_id order by salary desc) r
-from hr.employees e;
+select e.*, row_number() over(partition by job_id order by salary desc) r
+  from hr.employees e;
 
 
 SELECT employee_id, salary,
@@ -859,13 +859,13 @@ FROM hr.employees;
 --4. LEAD()
 --Accesses data from the following row, allowing for "look-ahead" comparisons.
 SELECT employee_id, salary,
-       LEAD(salary, 1) OVER (ORDER BY salary) AS next_salary
+       LEAD(salary,  1) OVER (ORDER BY salary) AS next_salary
 FROM hr.employees;
 
 --5. LAG()
 --Accesses data from the preceding row, allowing for "look-back" comparisons.
 SELECT employee_id, salary,
-       LAG(salary, 2, 0) OVER (ORDER BY salary) AS previous_salary
+       LAG(salary, 2, 0) OVER (ORDER BY salary) AS previous_salary--if no previous row then return 0
 FROM hr.employees;
 
 
@@ -2208,6 +2208,9 @@ drop table demo1
 --If you want to perform any operation base on this data then just point chat_gpt to RETAIL_DATA
 --hi will understand.
 
+-- Creted in user := shubh, Pass := shubh123, AS SYSDBA :
+
+
 
 CREATE TABLE CLIENTS (
     CLIENT_ID NUMBER PRIMARY KEY,
@@ -2269,12 +2272,6 @@ SELECT LEVEL,
        TRUNC(DBMS_RANDOM.VALUE(1,10))
 FROM dual
 CONNECT BY LEVEL <= 200;
-
---------------------------------------------------------------------------------------------------------------
---------------------------------------------------------------------------------------------------------------
-                                        from here Git is tracking 
---------------------------------------------------------------------------------------------------------------
---------------------------------------------------------------------------------------------------------------
 
 commit;
 
@@ -2363,12 +2360,112 @@ Show CLIENT_NAME, ITEM_NAME, COUNT(*)
 Use JOIN with aggregate*/
 
 
+---------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------
+--- SubQuery
+
+--Q1: Clients with above-average total purchase quantity
+--Find all clients whose total quantity purchased across all items is greater than the 
+--average total quantity per client.
+--Show: CLIENT_NAME and total purchased quantity.
+
+select client_name, sum(quantity) as total_purchase_Q
+  from clients c
+  join sales s
+    on c.client_id = s.client_id
+ group by client_name
+having sum(quantity) > (select avg(total_qty)
+                          from (select sum(quantity) as total_qty
+                                  from sales
+                                 group by client_id));
+
+--Q2: Items never sold
+--List all items that never appear in SALES.
+--Show: ITEM_NAME and CATEGORY.
+
+select item_name, category
+  from items i
+ where not exists (select 1 from sales s where i.item_id = s.item_id);
+
+/*Q3: Clients who purchased the same item more than 5 times in total
+
+Find clients who bought any item more than 5 times in total.
+Show: CLIENT_NAME, ITEM_NAME, and total quantity purchased.
+
+Q4: Latest sale date for each client
+
+Show each CLIENT_NAME and the latest sale date they made a purchase.
+Use a scalar subquery.
+
+Q5: Clients who purchased all items from category ‘Electronics’
+
+Find clients who have bought every item in the 'Electronics' category.
+Show: CLIENT_NAME.
+Use a double NOT EXISTS (division-style query).*/
 
 
+select * from clients ;
+select * from items ;
+select * from sales ;
+
+---------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------
+-- Case Decode
+
+--Q1: Categorize clients based on total purchase quantity
+--For each client, calculate the total quantity purchased and categorize as:
+--'Low' → total quantity < 20
+--'Medium' → total quantity between 20 and 50
+--'High' → total quantity > 50
+--Show: CLIENT_NAME, total_quantity, CATEGORY using CASE.
 
 
+/*Q2: Flag items as expensive or cheap
 
+Show ITEM_NAME, PRICE and a flag 'Expensive' if price > 2000, 'Moderate' if price between 1000–2000, 'Cheap' if price < 1000.
 
+Use DECODE or CASE.
+
+Q3: Discount assignment using DECODE
+
+For each client, assign a discount % based on total purchase quantity:
+
+0–10 → 5%
+
+11–30 → 10%
+
+31–50 → 15%
+
+50 → 20%
+
+Show CLIENT_NAME, total_quantity, DISCOUNT using DECODE.
+
+Q4: Sale quantity status
+
+For each sale in SALES, create a column STATUS:
+
+'Small' → quantity <= 3
+
+'Medium' → quantity between 4–6
+
+'Large' → quantity > 6
+
+Use CASE.
+
+Q5: Client city and purchase category summary
+
+For each client, show CLIENT_NAME and a summary based on the categories of items purchased:
+
+'Electronics Lover' → if purchased at least one Electronics item
+
+'Clothing Fan' → if purchased at least one Clothing item
+
+'Mixed Shopper' → if purchased multiple categories
+
+Use CASE or DECODE with subqueries or aggregation.
+*/
 
 
 
