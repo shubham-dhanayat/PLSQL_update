@@ -823,8 +823,8 @@ SELECT employee_id, salary,
        ROW_NUMBER() OVER (ORDER BY salary DESC) AS row_num
 FROM hr.employees;
 
-select e.*, row_number() over(partition by job_id order by salary desc) r
-  from hr.employees e;
+select e.*, row_number() over (partition by job_id order by salary desc) r
+from hr.employees e;
 
 
 SELECT employee_id, salary,
@@ -859,13 +859,13 @@ FROM hr.employees;
 --4. LEAD()
 --Accesses data from the following row, allowing for "look-ahead" comparisons.
 SELECT employee_id, salary,
-       LEAD(salary,  1) OVER (ORDER BY salary) AS next_salary
+       LEAD(salary, 1) OVER (ORDER BY salary) AS next_salary
 FROM hr.employees;
 
 --5. LAG()
 --Accesses data from the preceding row, allowing for "look-back" comparisons.
 SELECT employee_id, salary,
-       LAG(salary, 2, 0) OVER (ORDER BY salary) AS previous_salary--if no previous row then return 0
+       LAG(salary, 2, 0) OVER (ORDER BY salary) AS previous_salary
 FROM hr.employees;
 
 
@@ -2208,9 +2208,6 @@ drop table demo1
 --If you want to perform any operation base on this data then just point chat_gpt to RETAIL_DATA
 --hi will understand.
 
--- Creted in user := shubh, Pass := shubh123, AS SYSDBA :
-
-
 
 CREATE TABLE CLIENTS (
     CLIENT_ID NUMBER PRIMARY KEY,
@@ -2273,6 +2270,12 @@ SELECT LEVEL,
 FROM dual
 CONNECT BY LEVEL <= 200;
 
+--------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------
+                                        from here Git is tracking 
+--------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------
+
 commit;
 
 --Aggregate Functions (GROUP BY / HAVING / SUM / AVG / COUNT)
@@ -2316,48 +2319,117 @@ select c.client_name, round(avg(quantity*price),2) as avg_order_value
 --Total purchase amount = SUM(PRICE * QUANTITY) per client
 --Use RANK() function
 
+SELECT client_id,
+       client_name,
+       pur_amt,
+       RANK() OVER (ORDER BY pur_amt DESC) AS rn
+FROM (
+      SELECT c.client_id,
+             c.client_name,
+             SUM(i.price * s.quantity) AS pur_amt
+      FROM clients c
+      JOIN sales s ON c.client_id = s.client_id
+      JOIN items i ON s.item_id = i.item_id
+      GROUP BY c.client_id, c.client_name
+     );
 
+
+--Q5: For each client, show their last 3 purchases by SALE_DATE.
+--Include SALE_ID, ITEM_NAME, SALE_DATE, QUANTITY
+--Use ROW_NUMBER() or RANK() analytical function
+
+select client_name, sale_id, item_name, sale_date, quantity, rn
+  from (select c.client_name,
+               s.sale_id,
+               i.item_name,
+               sale_date,
+               quantity,
+               row_number() over(partition by client_name order by sale_date desc) as rn
+          FROM clients c
+          JOIN sales s
+            ON c.client_id = s.client_id
+          JOIN items i
+            ON s.item_id = i.item_id)
+ where rn <= 3
+ order by client_name;
+
+--Q6: Show for each client the current sale amount and previous sale amount (based on SALE_DATE).
+--Columns: CLIENT_NAME, SALE_DATE, CURRENT_AMOUNT, PREV_AMOUNT
+--Use LAG()
+
+select client_name,
+       sale_date,
+       current_amt,
+       lag(current_amt) over(partition by client_name order by sale_date)
+  from (select c.client_name,
+               sale_date,
+               (i.price * s.quantity) AS current_amt
+          FROM clients c
+          JOIN sales s
+            ON c.client_id = s.client_id
+          JOIN items i
+            ON s.item_id = i.item_id);
+            
+select c.client_name,
+       sale_date,
+       (i.price * s.quantity) AS current_amt,
+       lag(i.price * s.quantity) over(partition by client_name order by sale_date)
+  FROM clients c
+  JOIN sales s
+    ON c.client_id = s.client_id
+  JOIN items i
+    ON s.item_id = i.item_id;
+
+
+--3.Joins (INNER / LEFT / RIGHT / FULL / CROSS)
+--Q7: List all sales with client and item details.
+--Columns: SALE_ID, CLIENT_NAME, ITEM_NAME, QUANTITY, SALE_DATE
+--Use INNER JOIN
+
+select c.client_name, s.sale_id, i.item_name, sale_date, quantity
+  FROM clients c
+  JOIN sales s
+    ON c.client_id = s.client_id
+  JOIN items i
+    ON s.item_id = i.item_id;
+
+
+--Q8: List all clients and their total number of orders, including clients who never placed an order.
+--Columns: CLIENT_NAME, TOTAL_ORDERS
+--Use LEFT JOIN
+
+select client_name, count(sale_id) as total_orders
+  from clients c
+  left join sales s
+    on c.client_id = s.client_id
+ group by client_name;
+
+--Q9: List all items and total quantity sold, including items never sold. grand total of quantity
+--Columns: ITEM_NAME, TOTAL_QUANTITY
+--Use RIGHT JOIN or LEFT JOIN
+
+select nvl(item_name, 'Total'), sum(quantity) as TOTAL_QUANTITY
+  from items i
+ left join sales s
+    on i.item_id = s.item_id
+ group by rollup(item_name);
+
+--Q10: Find clients who have purchased the same item more than once.
+--Show CLIENT_NAME, ITEM_NAME, COUNT(*)
+--Use JOIN with aggregate
+
+select client_name,  count(s.item_id)
+  from clients c
+  join sales s
+    on c.client_id = s.client_id
+  join items i
+    on s.item_id = i.item_id
+ group by client_name
+having count(s.item_id) > 1;
 
 select * from clients ;
 select * from items ;
 select * from sales ;
-/*Q5: For each client, show their last 3 purchases by SALE_DATE.
-
-Include SALE_ID, ITEM_NAME, SALE_DATE, QUANTITY
-
-Use ROW_NUMBER() or RANK() analytical function
-
-Q6: Show for each client the current sale amount and previous sale amount (based on SALE_DATE).
-
-Columns: CLIENT_NAME, SALE_DATE, CURRENT_AMOUNT, PREV_AMOUNT
-
-Use LAG()
-
-3️⃣ Joins (INNER / LEFT / RIGHT / FULL / CROSS)
-
-Q7: List all sales with client and item details.
-
-Columns: SALE_ID, CLIENT_NAME, ITEM_NAME, QUANTITY, SALE_DATE
-
-Use INNER JOIN
-
-Q8: List all clients and their total number of orders, including clients who never placed an order.
-
-Columns: CLIENT_NAME, TOTAL_ORDERS
-
-Use LEFT JOIN
-
-Q9: List all items and total quantity sold, including items never sold.
-
-Columns: ITEM_NAME, TOTAL_QUANTITY
-
-Use RIGHT JOIN or LEFT JOIN
-
-Q10: Find clients who have purchased the same item more than once.
-
-Show CLIENT_NAME, ITEM_NAME, COUNT(*)
-
-Use JOIN with aggregate*/
 
 
 ---------------------------------------------------------------------------------------------------------------
@@ -2466,6 +2538,12 @@ For each client, show CLIENT_NAME and a summary based on the categories of items
 
 Use CASE or DECODE with subqueries or aggregation.
 */
+
+
+
+
+
+
 
 
 
