@@ -1580,17 +1580,37 @@ BEGIN
   CLOSE c;
 END;
 
-/*3️⃣ Procedure to insert data using a loop
+--3.Procedure to insert data using a loop
+--Write a procedure insert_bulk_emp that:
+--accepts n rows as input
+--inserts n dummy employees using a FOR loop
+--returns count of rows inserted using OUT parameter
 
-Write a procedure insert_bulk_emp that:
+CREATE OR REPLACE PROCEDURE insert_bulk_emp(
+    p_num IN NUMBER,           -- number of employees to insert
+    p_count OUT NUMBER         -- returns number of rows inserted
+) IS
+BEGIN
+    p_count := 0;  -- initialize counter
+    
+    FOR i IN 1 .. p_num LOOP
+        INSERT INTO employee(emp_id, emp_name, job_title, salary)
+        VALUES (
+            employee_seq.NEXTVAL,             -- assuming sequence exists
+            'Dummy_Emp_' || i,                -- dummy name
+            'Developer',                      -- dummy job
+            5000 + i * 100                    -- dummy salary
+        );
+        p_count := p_count + 1;              -- increment counter
+    END LOOP;
+    
+    COMMIT;  -- commit all inserts
+END;
+/
 
-accepts n rows as input
 
-inserts n dummy employees using a FOR loop
 
-returns count of rows inserted using OUT parameter
-
-4️⃣ Procedure that uses explicit cursor + FETCH
+/*4️⃣ Procedure that uses explicit cursor + FETCH
 
 Write a procedure get_max_salary_emp that:
 
